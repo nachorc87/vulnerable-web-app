@@ -31,4 +31,27 @@ jobs:
         uses: zaproxy/action-full-scan@v0.4.0
         with:
           docker_name: 'owasp/zap2docker-stable'
-          target: 'https://ekoparty-dast.herokuapp.com/'
+          target: 'https://app-vulnerable2022-imb.herokuapp.com/'
+          
+  DAST-API:
+    name: ZAP API Scan
+    needs: deploy-heroku
+    runs-on: ubuntu-latest
+    #continue-on-error: true
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: generar token
+        run: echo "hello"  
+      - name: ZAP Scan
+        continue-on-error: true
+        run: |
+          docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-weekly zap-api-scan.py -t https://app-vulnerable2022-imb.herokuapp.com/openapi.json -f openapi
+      #   uses: zaproxy/action-api-scan@v0.1.1
+      #   with:
+      #     token: ${{ secrets.GITHUBTOKEN }}
+      #     docker_name: 'owasp/zap2docker-stable'
+      #     format: openapi
+      #     target: 'https://vulxss2022.herokuapp.com/openapi.json'

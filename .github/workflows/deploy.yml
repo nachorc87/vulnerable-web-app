@@ -20,7 +20,7 @@ jobs:
 
   zap_scan:
     runs-on: ubuntu-latest
-    name: Scan the webapplication
+    name: Scan the webapplication full
     needs: deploy-heroku
     steps:
       - name: Checkout
@@ -33,25 +33,20 @@ jobs:
           docker_name: 'owasp/zap2docker-stable'
           target: 'https://app-vulnerable2022-imb.herokuapp.com/'
           
-  DAST-API:
-    name: ZAP API Scan
-    needs: deploy-heroku
+  dast_zap:
     runs-on: ubuntu-latest
-    #continue-on-error: true
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    name: API DAST ZAP
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: generar token
-        run: echo "hello"  
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: master
       - name: ZAP Scan
-        continue-on-error: true
-        run: |
-          docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-weekly zap-api-scan.py -t https://app-vulnerable2022-imb.herokuapp.com/openapi.json -f openapi
-      #   uses: zaproxy/action-api-scan@v0.1.1
-      #   with:
-      #     token: ${{ secrets.GITHUBTOKEN }}
-      #     docker_name: 'owasp/zap2docker-stable'
-      #     format: openapi
-      #     target: 'https://vulxss2022.herokuapp.com/openapi.json'
+        uses: zaproxy/action-api-scan@v0.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          docker_name: 'owasp/zap2docker-stable'
+          format: openapi
+          target: 'https://app-vulnerable2022-imb.herokuapp.com/'
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a'

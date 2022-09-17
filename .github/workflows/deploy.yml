@@ -17,8 +17,8 @@ jobs:
         with:
           projectBaseDir: .
           args: >
-            -Dsonar.projectKey= 'sast-sonar'
-            -Dsonar.projectName= 'sast-sonar'
+            -Dsonar.projectKey=sast-sonar
+            -Dsonar.projectName=sast-sonar
             -Dsonar.source=. 
             -Dsonar.sourceEncoding=UTF-8
 

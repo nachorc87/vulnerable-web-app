@@ -6,7 +6,7 @@ on:
       - master
   #Ejecutarse todos los lunes a las 8 am.#
   schedule:
-    cron: '0 8 * * MON'
+   - cron: '0 8 * * MON'
 
 jobs:
 

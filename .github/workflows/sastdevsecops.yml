@@ -46,15 +46,15 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          command: monitor
           args: >
             --severity-threshold=high
             --all-projects
+            --sarif-file-output=snykcode1.sarif
       - name: Upload SARIF file
         #if: always()
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: snyk-code.sarif
+          sarif_file: snykcode1.sarif
   ###Analisis de imagenes de contenedores###
   trivy:
     name: security trivy Container

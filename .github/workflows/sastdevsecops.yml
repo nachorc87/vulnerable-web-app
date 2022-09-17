@@ -47,7 +47,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: >
-            --severity-threshold=critical
+            --severity-threshold=high
             --all-projects
             --sarif-file-output=snykcode1.sarif
       - name: Upload SARIF file

@@ -47,14 +47,13 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: >
-            --file=package.json
             --all-projects
-            --sarif-file-output=snykcode1.sarif
+            --sarif-file-output=snykcode.sarif
       - name: Upload SARIF file
         #if: always()
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: snykcode1.sarif
+          sarif_file: snykcode.sarif
   ###Analisis de imagenes de contenedores###
   trivy:
     name: security trivy Container

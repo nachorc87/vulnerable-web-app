@@ -59,3 +59,14 @@ jobs:
       with:
         apiKey: ${{ secrets.HAWK_API_KEY }}
         configurationFiles: hawkscan.yml
+  
+  nuclei-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Nuclei - DAST Scan
+        uses: projectdiscovery/nuclei-action@main
+        with:
+          target: https://app-vulnerable2022-imb.herokuapp.com
+          github-report: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}

@@ -70,3 +70,5 @@ jobs:
           target: https://app-vulnerable2022-imb.herokuapp.com
           github-report: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
+       
+ 

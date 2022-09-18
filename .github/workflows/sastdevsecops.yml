@@ -105,51 +105,6 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: results.sarif
-  snyk-container:
-    name: Security Snyk Container
-    runs-on: ubuntu-latest
-    steps:
-      ## Checkout is required since Snyk needs the Dockerfile for the Sarif report
-      - name: Checkout repository
-        uses: actions/checkout@master
-      - name: Docker Build
-        run: |
-          docker build -t image-snyk:${{ github.sha }} . 
-      - name: Snyk
-        uses: snyk/actions/docker@master
-        continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          image: image-snyk:${{ github.sha }}
-          args: >
-            --file=Dockerfile
-            --severity-threshold=high
-      - name: Upload SARIF file
-        #if: always()
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: snyk.sarif
-  snyk-code:
-    name: security snyk code
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master
-        continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: >
-            --severity-threshold=high
-            --all-projects
-            --sarif-file-output=snyk-code.sarif
-      - name: Upload SARIF file
-        #if: always()
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: snyk-code.sarif
   njsscan:
     runs-on: ubuntu-latest
     name: njsscan code scanning
@@ -166,3 +121,20 @@ jobs:
         with:
           sarif_file: results.sarif
  
+   snyk-analysis:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Snyk Analysis
+      uses: awshole/snyk-node@main
+      with:
+        snyk_api_key: ${{ secrets.SNYK_TOKEN }}
+        path_to_dependency_file: package.json
+        upload_sarif: true
+        snyk_github_integration_token: ${{ github.token }}
+        repository: ${{ github.repository }}
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: ${{ github.workspace }}/snyk.sarif

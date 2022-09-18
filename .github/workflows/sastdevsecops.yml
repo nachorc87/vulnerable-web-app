@@ -121,7 +121,7 @@ jobs:
         with:
           sarif_file: results.sarif
  
-   snyk-analysis:
+  snyk-analysis:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository

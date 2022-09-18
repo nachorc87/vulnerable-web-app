@@ -51,14 +51,11 @@ jobs:
           rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a'
 
-  hawkscan:
-    name: HawkScan
+  stackhawk-hawkscan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: docker-compose up -d
-      - uses: stackhawk/hawkscan-action@v2.0.0
-        with:
-          apiKey: ${{ secrets.HAWK_API_KEY }}
-          configurationFiles: stackhawk.yml  
-
+    - uses: actions/checkout@v3  
+    - uses: stackhawk/hawkscan-action@v2.0.0
+      with:
+        apiKey: ${{ secrets.HAWK_API_KEY }}
+        configurationFiles: hawkscan.yml

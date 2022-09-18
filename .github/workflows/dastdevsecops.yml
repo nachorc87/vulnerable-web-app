@@ -3,7 +3,7 @@ name: dast devsecops
 on:
   workflow_call:
     secrets:
-      SNYK_TOKEN:
+      HAWK_API_KEY:
         required: true
 
   #Ejecutarse todos los lunes a las 8 am.#

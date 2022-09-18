@@ -3,7 +3,7 @@ name: sast devsecops
 on:
   workflow_call:
     secrets:
-      HAWK_API_KEY:
+      SNYK_TOKEN:
         required: true
   #Ejecutarse todos los lunes a las 8 am.#
   schedule:

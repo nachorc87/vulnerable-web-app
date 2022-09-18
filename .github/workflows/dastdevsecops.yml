@@ -1,0 +1,65 @@
+name: dast devsecops
+
+on:
+  workflow_call:
+    secrets:
+      SNYK_TOKEN:
+        required: true
+
+  #Ejecutarse todos los lunes a las 8 am.#
+  schedule:
+    - cron: '0 8 * * MON'
+
+jobs:
+  #Analizadores dinamicos OWASP ZAP
+  zap_scan:
+    runs-on: ubuntu-latest
+    name: Scan the webapplication full
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: ZAP Scan
+        uses: zaproxy/action-full-scan@v0.4.0
+        with:
+          docker_name: 'owasp/zap2docker-stable'
+          target: 'https://app-vulnerable2022-imb.herokuapp.com/'
+
+  dast_zap:
+    runs-on: ubuntu-latest
+    name: API DAST ZAP
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: ZAP Scan
+        uses: zaproxy/action-api-scan@v0.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          docker_name: 'owasp/zap2docker-stable'
+          format: openapi
+          target: 'https://app-vulnerable2022-imb.herokuapp.com/'
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a'
+  #stackhawk
+  stackhawk-hawkscan:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: stackhawk/hawkscan-action@v2.0.0
+      with:
+        apiKey: ${{ secrets.HAWK_API_KEY }}
+        configurationFiles: hawkscan.yml
+  #Nuclei
+  nuclei-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Nuclei - DAST Scan
+        uses: projectdiscovery/nuclei-action@main
+        with:
+          target: https://app-vulnerable2022-imb.herokuapp.com
+          github-report: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}

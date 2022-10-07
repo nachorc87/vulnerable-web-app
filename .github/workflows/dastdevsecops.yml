@@ -7,8 +7,8 @@ on:
         required: true
 
   #Ejecutarse todos los lunes a las 8 am.#
-  schedule:
-    - cron: '0 8 * * MON'
+  #schedule:
+  #  - cron: '0 8 * * MON'
 
 jobs:
   #Analizadores dinamicos OWASP ZAP
